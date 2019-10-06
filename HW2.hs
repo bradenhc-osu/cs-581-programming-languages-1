@@ -43,12 +43,20 @@ toRPN (Mul l r) = (toRPN l) ++ " " ++ (toRPN r) ++ " *"
 --   >>> all (\e -> e == fromRPN (toRPN e)) [e1,e2,e3,e4]
 --   True
 --
-fromRPN :: String -> Expr
-fromRPN s = fromRPNHelper [] s
+-- fromRPN :: String -> Expr
+-- fromRPN s = fromRPNHelper [] s
 
-fromRPNHelper :: [Expr] -> String -> Expr
-fromRPNHelper (e:es) "" = e
-fromRPNHelper es (' ':s) = fromRPNHelper es s
-fromRPNHelper (x:y:es) ('+':s) = fromRPNHelper ((Add y x):es) s
-fromRPNHelper (x:y:es) ('*':s) = fromRPNHelper ((Mul y x):es) s
-fromRPNHelper es (x:s) = fromRPNHelper ((Lit (read (x:""))):es) s
+-- fromRPNHelper :: [Expr] -> String -> Expr
+-- fromRPNHelper (e:es)   ""      = e
+-- fromRPNHelper es       (' ':s) = fromRPNHelper es s
+-- fromRPNHelper (x:y:es) ('+':s) = fromRPNHelper ((Add y x):es) s
+-- fromRPNHelper (x:y:es) ('*':s) = fromRPNHelper ((Mul y x):es) s
+-- fromRPNHelper es       (x:s)   = fromRPNHelper ((Lit (read (x:""))):es) s
+fromRPN :: String -> Expr
+fromRPN s = head (go [] (words s))
+    where
+        go :: [Expr] -> [String] -> [Expr]
+        go es       []       = es
+        go (x:y:es) ("+":ss) = go (Add y x : es) ss
+        go (x:y:es) ("*":ss) = go (Mul y x : es) ss
+        go es       (x:ss)   = go ((Lit (read s)) : es) ss
