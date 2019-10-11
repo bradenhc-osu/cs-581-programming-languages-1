@@ -84,10 +84,12 @@ toInt (Succ x) = 1 + toInt x
 --   True
 --
 add :: Nat -> Nat -> Nat
-add Zero Zero         = Zero
-add Zero (Succ x)     = Succ(add Zero x)
-add (Succ x) Zero     = Succ(add Zero x)
-add (Succ x) (Succ y) = (Succ(Succ(add x y)))
+add Zero     m = m
+add (Succ n) m = add n (Succ m)
+-- add Zero Zero         = Zero
+-- add Zero (Succ x)     = Succ(add Zero x)
+-- add (Succ x) Zero     = Succ(add Zero x)
+-- add (Succ x) (Succ y) = (Succ(Succ(add x y)))
 
 
 -- | Subtract the second natural number from the first. Return zero
@@ -106,10 +108,13 @@ add (Succ x) (Succ y) = (Succ(Succ(add x y)))
 --   Zero
 --
 sub :: Nat -> Nat -> Nat
-sub Zero Zero         = Zero
-sub (Succ x) Zero     = Succ x
-sub Zero (Succ x)     = Zero
-sub (Succ x) (Succ y) = sub x y
+sub Zero     _        = Zero
+sub n        Zero     = n
+sub (Succ n) (Succ m) = sub n m
+-- sub Zero Zero         = Zero
+-- sub (Succ x) Zero     = Succ x
+-- sub Zero (Succ x)     = Zero
+-- sub (Succ x) (Succ y) = sub x y
 
 
 -- | Is the left value greater than the right?
@@ -124,10 +129,13 @@ sub (Succ x) (Succ y) = sub x y
 --   False
 --
 gt :: Nat -> Nat -> Bool
-gt (Succ x) Zero     = True
-gt Zero (Succ y)     = False
-gt Zero Zero         = False
-gt (Succ x) (Succ y) = gt x y
+gt Zero     _        = False
+gt _        Zero     = True
+gt (Succ n) (Succ m) = gt n m
+-- gt (Succ x) Zero     = True
+-- gt Zero (Succ y)     = False
+-- gt Zero Zero         = False
+-- gt (Succ x) (Succ y) = gt x y
 
 
 -- | Multiply two natural numbers.
@@ -148,10 +156,12 @@ gt (Succ x) (Succ y) = gt x y
 --   9
 --
 mult :: Nat -> Nat -> Nat
-mult Zero _               = Zero
-mult _ Zero               = Zero
-mult (Succ x) (Succ Zero) = (Succ x)
-mult (Succ x) (Succ y)    = add (Succ x) (mult (Succ x) y)
+mult Zero     _ = Zero
+mult (Succ n) m = add m (mult n m)
+-- mult Zero _               = Zero
+-- mult _ Zero               = Zero
+-- mult (Succ x) (Succ Zero) = (Succ x)
+-- mult (Succ x) (Succ y)    = add (Succ x) (mult (Succ x) y)
 
 
 -- | Compute the sum of a list of natural numbers.
@@ -178,7 +188,8 @@ sum = foldr add Zero
 --   10000
 --
 odds :: [Nat]
-odds = godds Zero
-    where
-        godds :: Nat -> [Nat]
-        godds x = (Succ x) : godds (Succ (Succ x))
+odds = one : map (add two) odds
+-- odds = godds Zero
+--     where
+--         godds :: Nat -> [Nat]
+--         godds x = (Succ x) : godds (Succ (Succ x))
